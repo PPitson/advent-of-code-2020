@@ -1,16 +1,16 @@
-from typing import Iterator
-
-
 def part_one(input_filename: str) -> int:
     numbers = _get_numbers_from_file(input_filename)
-    first, second = _find_pair_which_sums_to(list(numbers), desired_sum=2020)
+    first, second = _find_pair_which_sums_to(numbers, desired_sum=2020)
     return first * second
 
 
-def _get_numbers_from_file(input_filename: str) -> Iterator[int]:
-    with open(input_filename) as file:
-        for line in file:
-            yield int(line)
+def _get_numbers_from_file(input_filename: str) -> list[int]:
+    def _numbers_generator():
+        with open(input_filename) as file:
+            for line in file:
+                yield int(line)
+
+    return list(_numbers_generator())
 
 
 def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int]:
@@ -23,7 +23,7 @@ def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[i
 
 def part_two(input_filename: str) -> int:
     numbers = _get_numbers_from_file(input_filename)
-    first, second, third = _find_triple_which_sums_to(list(numbers), desired_sum=2020)
+    first, second, third = _find_triple_which_sums_to(numbers, desired_sum=2020)
     return first * second * third
 
 
