@@ -3,7 +3,7 @@ from typing import Iterator
 
 def part_one(input_filename: str) -> int:
     numbers = _get_numbers_from_file(input_filename)
-    first, second = _find_pair_which_sums_to(numbers, desired_sum=2020)
+    first, second = _find_pair_which_sums_to(list(numbers), desired_sum=2020)
     return first * second
 
 
@@ -13,11 +13,10 @@ def _get_numbers_from_file(input_filename: str) -> Iterator[int]:
             yield int(line)
 
 
-def _find_pair_which_sums_to(numbers: Iterator[int], *, desired_sum: int) -> tuple[int, int]:
-    unique_numbers = set(numbers)
-    for number in unique_numbers:
+def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int]:
+    for index, number in enumerate(numbers):
         remainder = desired_sum - number
-        if remainder in unique_numbers:
+        if remainder in numbers[index + 1 :]:
             return number, remainder
     return -1, -1
 
