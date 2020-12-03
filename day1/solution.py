@@ -22,6 +22,21 @@ def _find_pair_which_sums_to(numbers: Iterator[int], *, desired_sum: int) -> tup
     return -1, -1
 
 
+def part_two(input_filename: str) -> int:
+    numbers = _get_numbers_from_file(input_filename)
+    first, second, third = _find_triple_which_sums_to(list(numbers), desired_sum=2020)
+    return first * second * third
+
+
+def _find_triple_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int, int]:
+    for index, first_number in enumerate(numbers):
+        for second_index, second_number in enumerate(numbers[index + 1 :]):
+            remainder = desired_sum - first_number - second_number
+            if remainder in numbers[second_index + 1 :]:
+                return first_number, second_number, remainder
+    return -1, -1, -1
+
+
 if __name__ == "__main__":
-    result = part_one("data/input.txt")
-    print(result)
+    print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
