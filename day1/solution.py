@@ -1,11 +1,20 @@
+import itertools
+import operator
+from functools import reduce
+
+
 class EntriesNotFound(Exception):
     """ Raised when there were no entries that sum to the desired number """
 
 
 def part_one(input_filename: str) -> int:
     numbers = _get_numbers_from_file(input_filename)
-    first, second = _find_pair_which_sums_to(numbers, desired_sum=2020)
-    return first * second
+    return _find_multiplication_of_numbers_which_sum_to_desired_sum(numbers, combination_length=2, desired_sum=2020)
+
+
+def part_two(input_filename: str) -> int:
+    numbers = _get_numbers_from_file(input_filename)
+    return _find_multiplication_of_numbers_which_sum_to_desired_sum(numbers, combination_length=3, desired_sum=2020)
 
 
 def _get_numbers_from_file(input_filename: str) -> list[int]:
@@ -13,29 +22,19 @@ def _get_numbers_from_file(input_filename: str) -> list[int]:
         return [int(line) for line in file]
 
 
-def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int]:
-    for index, number in enumerate(numbers):
-        remainder = desired_sum - number
-        if remainder in numbers[index + 1 :]:
-            return number, remainder
-
-    raise EntriesNotFound
-
-
-def part_two(input_filename: str) -> int:
-    numbers = _get_numbers_from_file(input_filename)
-    first, second, third = _find_triple_which_sums_to(numbers, desired_sum=2020)
-    return first * second * third
-
-
-def _find_triple_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int, int]:
-    for index, first_number in enumerate(numbers):
-        for second_index, second_number in enumerate(numbers[index + 1 :]):
-            remainder = desired_sum - first_number - second_number
-            if remainder in numbers[second_index + 1 :]:
-                return first_number, second_number, remainder
-
-    raise EntriesNotFound
+def _find_multiplication_of_numbers_which_sum_to_desired_sum(
+    numbers: list[int], combination_length: int, desired_sum: int
+) -> int:
+    try:
+        numbers_combination = next(
+            combination
+            for combination in itertools.combinations(numbers, combination_length)
+            if sum(combination) == desired_sum
+        )
+    except StopIteration:
+        raise EntriesNotFound
+    else:
+        return reduce(operator.mul, numbers_combination, 1)
 
 
 if __name__ == "__main__":
