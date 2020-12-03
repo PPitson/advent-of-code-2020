@@ -1,3 +1,7 @@
+class EntriesNotFound(Exception):
+    """ Raised when there were no entries that sum to the desired number """
+
+
 def part_one(input_filename: str) -> int:
     numbers = _get_numbers_from_file(input_filename)
     first, second = _find_pair_which_sums_to(numbers, desired_sum=2020)
@@ -18,7 +22,8 @@ def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[i
         remainder = desired_sum - number
         if remainder in numbers[index + 1 :]:
             return number, remainder
-    return -1, -1
+
+    raise EntriesNotFound
 
 
 def part_two(input_filename: str) -> int:
@@ -33,7 +38,8 @@ def _find_triple_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple
             remainder = desired_sum - first_number - second_number
             if remainder in numbers[second_index + 1 :]:
                 return first_number, second_number, remainder
-    return -1, -1, -1
+
+    raise EntriesNotFound
 
 
 if __name__ == "__main__":
