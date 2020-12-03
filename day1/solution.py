@@ -9,12 +9,8 @@ def part_one(input_filename: str) -> int:
 
 
 def _get_numbers_from_file(input_filename: str) -> list[int]:
-    def _numbers_generator():
-        with open(input_filename) as file:
-            for line in file:
-                yield int(line)
-
-    return list(_numbers_generator())
+    with open(input_filename) as file:
+        return [int(line) for line in file]
 
 
 def _find_pair_which_sums_to(numbers: list[int], *, desired_sum: int) -> tuple[int, int]:
