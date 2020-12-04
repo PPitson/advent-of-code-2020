@@ -1,6 +1,7 @@
 import itertools
 import operator
 from functools import reduce
+from typing import Iterator
 
 
 class EntriesNotFound(Exception):
@@ -17,13 +18,14 @@ def part_two(input_filename: str) -> int:
     return _find_multiplication_of_numbers_which_sum_to_desired_sum(numbers, combination_length=3, desired_sum=2020)
 
 
-def _get_numbers_from_file(input_filename: str) -> list[int]:
+def _get_numbers_from_file(input_filename: str) -> Iterator[int]:
     with open(input_filename) as file:
-        return [int(line) for line in file]
+        for line in file:
+            yield int(line)
 
 
 def _find_multiplication_of_numbers_which_sum_to_desired_sum(
-    numbers: list[int], combination_length: int, desired_sum: int
+    numbers: Iterator[int], combination_length: int, desired_sum: int
 ) -> int:
     try:
         numbers_combination = next(
