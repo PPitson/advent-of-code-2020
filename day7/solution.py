@@ -22,6 +22,11 @@ def part_one(input_filename: str) -> int:
     return _count_bag_colors_which_can_contain_color(reverse_rules, desired_color="shiny gold")
 
 
+def part_two(input_filename: str) -> int:
+    rules = _create_rules_dict(_parse_file(input_filename))
+    return _count_bags_inside_bag_of_given_color(rules, desired_color="shiny gold")
+
+
 def _parse_file(input_filename: str) -> Iterator[Rule]:
     with open(input_filename) as file:
         for line in file:
@@ -69,5 +74,16 @@ def _count_bag_colors_which_can_contain_color(reverse_rules: dict[str, set[str]]
     return len(bag_colors_which_contain_color(desired_color))
 
 
+def _count_bags_inside_bag_of_given_color(rules: dict[str, list[Content]], desired_color: str) -> int:
+    contents = rules[desired_color]
+    if not contents:
+        return 0
+
+    return sum(
+        content.quantity * (1 + _count_bags_inside_bag_of_given_color(rules, content.bag_color)) for content in contents
+    )
+
+
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
