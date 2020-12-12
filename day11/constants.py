@@ -1,0 +1,3 @@
+FLOOR = "."
+EMPTY_SEAT = "L"
+OCCUPIED_SEAT = "#"
