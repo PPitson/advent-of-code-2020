@@ -1,11 +1,20 @@
 from day11.constants import EMPTY_SEAT, OCCUPIED_SEAT
 from day11.strategies.adjacent_seats import AdjacentSeatsStrategy
 from day11.strategies.base import OccupiedSeatsStrategy
+from day11.strategies.first_visible_seats import FirstVisibleSeatsStrategy
 
 
 def part_one(input_filename: str) -> int:
+    return _solve_problem(input_filename, AdjacentSeatsStrategy())
+
+
+def part_two(input_filename: str) -> int:
+    return _solve_problem(input_filename, FirstVisibleSeatsStrategy())
+
+
+def _solve_problem(input_filename: str, occupied_seats_strategy: OccupiedSeatsStrategy) -> int:
     seat_layout = _get_initial_seat_layout(input_filename)
-    layout = _get_layout_for_which_seats_dont_change_anymore(seat_layout, AdjacentSeatsStrategy())
+    layout = _get_layout_for_which_seats_dont_change_anymore(seat_layout, occupied_seats_strategy)
     return _count_occupied_seats(layout)
 
 
@@ -56,3 +65,4 @@ def _count_occupied_seats(seats_layout: list[str]) -> int:
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))

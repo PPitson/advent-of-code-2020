@@ -1,24 +1,12 @@
-from day11.constants import OCCUPIED_SEAT
 from day11.strategies.base import OccupiedSeatsStrategy
 
 
 class AdjacentSeatsStrategy(OccupiedSeatsStrategy):
-    def count_occupied_seats(self, seats_layout: list[str], row: int, column: int) -> int:
-        return self._count_adjacent_occupied_seats(seats_layout, row, column)
-
     @property
     def min_count_of_visible_occupied_seats_for_occupied_seat_to_become_empty(self) -> int:
         return 4
 
-    def _count_adjacent_occupied_seats(self, seats_layout: list[str], row: int, column: int) -> int:
-        adjacent_seats_indices = self._get_adjacent_seats_indices(seats_layout, row, column)
-        return sum(
-            1
-            for seat_row, seat_column in adjacent_seats_indices
-            if seats_layout[seat_row][seat_column] == OCCUPIED_SEAT
-        )
-
-    def _get_adjacent_seats_indices(self, seats_layout: list[str], row: int, column: int) -> list[tuple[int, int]]:
+    def _get_visible_seats_indices(self, seats_layout: list[str], row: int, column: int) -> list[tuple[int, int]]:
         max_column = len(seats_layout[0])
         max_row = len(seats_layout)
         return (
