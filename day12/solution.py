@@ -1,10 +1,16 @@
 from day12.models import Direction, Instruction, Action
 from day12.strategies.base import ShipMovementStrategy
 from day12.strategies.default import DefaultMovementStrategy
+from day12.strategies.real import RealMovementStrategy
 
 
 def part_one(input_filename: str) -> int:
     strategy = DefaultMovementStrategy(starting_direction=Direction.EAST)
+    return _get_manhattan_distance_after_moving_ship(input_filename, strategy)
+
+
+def part_two(input_filename: str) -> int:
+    strategy = RealMovementStrategy(waypoint_relative_longitude=10, waypoint_relative_latitude=1)
     return _get_manhattan_distance_after_moving_ship(input_filename, strategy)
 
 
@@ -29,3 +35,4 @@ def _manhattan_distance(coordinates: tuple[int, int]) -> int:
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
