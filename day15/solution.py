@@ -1,6 +1,14 @@
 def part_one(input_filename: str) -> int:
+    return _get_last_spoken_number_in_the_game_after_number_of_turns(input_filename, number_of_turns=2020)
+
+
+def part_two(input_filename: str) -> int:
+    return _get_last_spoken_number_in_the_game_after_number_of_turns(input_filename, number_of_turns=30000000)
+
+
+def _get_last_spoken_number_in_the_game_after_number_of_turns(input_filename: str, number_of_turns: int) -> int:
     starting_numbers = _get_starting_numbers(input_filename)
-    return play_game(starting_numbers, number_of_turns=2020)
+    return play_game(starting_numbers, number_of_turns)
 
 
 def _get_starting_numbers(input_filename: str) -> list[int]:
@@ -29,3 +37,4 @@ def play_game(starting_numbers: list[int], number_of_turns: int) -> int:
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
