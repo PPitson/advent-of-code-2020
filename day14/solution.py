@@ -2,13 +2,22 @@ import re
 from typing import Iterator
 
 from day14.constants import MASK_LENGTH, MASK_ASSIGNMENT_INSTRUCTION_PREFIX
+from day14.strategies.address import MemoryAddressDecoderStrategy
 from day14.strategies.base import MemoryUpdateStrategy
 from day14.strategies.value import ValueModifiedByMaskStrategy
 
 
 def part_one(input_filename: str) -> int:
+    return _get_sum_of_memory_values(input_filename, ValueModifiedByMaskStrategy())
+
+
+def part_two(input_filename: str) -> int:
+    return _get_sum_of_memory_values(input_filename, MemoryAddressDecoderStrategy())
+
+
+def _get_sum_of_memory_values(input_filename: str, memory_update_strategy: MemoryUpdateStrategy) -> int:
     instructions = _get_program_instructions(input_filename)
-    memory = _run_program(instructions, ValueModifiedByMaskStrategy())
+    memory = _run_program(instructions, memory_update_strategy)
     return sum(memory.values())
 
 
@@ -42,3 +51,4 @@ def _parse_memory_assignment_instruction(instruction: str) -> tuple[int, int]:
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
