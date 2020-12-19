@@ -4,11 +4,11 @@ from typing import Iterator
 from day14.constants import MASK_LENGTH, MASK_ASSIGNMENT_INSTRUCTION_PREFIX
 from day14.strategies.address import MemoryAddressDecoderStrategy
 from day14.strategies.base import MemoryUpdateStrategy
-from day14.strategies.value import ValueModifiedByMaskStrategy
+from day14.strategies.value import ValueDecoderStrategy
 
 
 def part_one(input_filename: str) -> int:
-    return _get_sum_of_memory_values(input_filename, ValueModifiedByMaskStrategy())
+    return _get_sum_of_memory_values(input_filename, ValueDecoderStrategy())
 
 
 def part_two(input_filename: str) -> int:

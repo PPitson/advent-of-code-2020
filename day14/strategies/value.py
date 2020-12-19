@@ -2,7 +2,7 @@ from day14.constants import MASK_LENGTH
 from day14.strategies.base import MemoryUpdateStrategy
 
 
-class ValueModifiedByMaskStrategy(MemoryUpdateStrategy):
+class ValueDecoderStrategy(MemoryUpdateStrategy):
     def update_memory(self, memory: dict[int, int], address: int, mask: str, value: int) -> dict[int, int]:
         memory[address] = self._apply_mask_to_value(mask, value)
         return memory
