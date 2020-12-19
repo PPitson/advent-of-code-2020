@@ -13,7 +13,7 @@ class MemoryAddressDecoderStrategy(MemoryUpdateStrategy):
         return memory
 
     def _apply_mask_to_address(self, mask: str, address: int) -> str:
-        binary_value = bin(address).removeprefix("0b").rjust(MASK_LENGTH, "0")
+        binary_value = self._binary_value_of_integer_with_bits_length(address, MASK_LENGTH)
         result = "".join(self._determine_bit(mask_bit, value_bit) for mask_bit, value_bit in zip(mask, binary_value))
         return result
 
@@ -24,7 +24,7 @@ class MemoryAddressDecoderStrategy(MemoryUpdateStrategy):
     def _generate_possible_addresses(self, address: str) -> Iterator[int]:
         indexes_to_replace = [m.start() for m in re.finditer("X", address)]
         count = len(indexes_to_replace)
-        replacements = [bin(value).removeprefix("0b").rjust(count, "0") for value in range(2 ** count)]
+        replacements = [self._binary_value_of_integer_with_bits_length(value, count) for value in range(2 ** count)]
         for replacement in replacements:
             yield self._create_new_address(address, indexes_to_replace, replacement)
 

@@ -8,7 +8,7 @@ class ValueDecoderStrategy(MemoryUpdateStrategy):
         return memory
 
     def _apply_mask_to_value(self, mask: str, value: int) -> int:
-        binary_value = bin(value).removeprefix("0b").rjust(MASK_LENGTH, "0")
+        binary_value = self._binary_value_of_integer_with_bits_length(value, MASK_LENGTH)
         result = "".join(self._determine_bit(mask_bit, value_bit) for mask_bit, value_bit in zip(mask, binary_value))
         return int(result, 2)
 
