@@ -1,5 +1,6 @@
 from typing import Iterator
 
+from day18.strategies.add_before_mul import AdditionBeforeMultiplicationExpressionEvaluator
 from day18.strategies.base import ExpressionEvaluator
 from day18.strategies.same_precedence import SamePrecedenceExpressionEvaluator
 
@@ -7,6 +8,13 @@ from day18.strategies.same_precedence import SamePrecedenceExpressionEvaluator
 def part_one(input_filename: str) -> int:
     return sum(
         _evaluate_expression(expression, SamePrecedenceExpressionEvaluator())
+        for expression in _get_expressions(input_filename)
+    )
+
+
+def part_two(input_filename: str) -> int:
+    return sum(
+        _evaluate_expression(expression, AdditionBeforeMultiplicationExpressionEvaluator())
         for expression in _get_expressions(input_filename)
     )
 
@@ -37,3 +45,4 @@ def _evaluate_expression(expression: str, expression_evaluator: ExpressionEvalua
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
