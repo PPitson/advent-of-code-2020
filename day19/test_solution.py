@@ -1,17 +1,28 @@
-import re
-
 import pytest
+import regex
 
-from day19.solution import part_one, decode_rule, replace_id_with_its_rule, get_ids, get_boundaries_of_number_in_string
+from day19.solution import (
+    part_one,
+    decode_rule,
+    replace_id_with_its_rule,
+    get_ids,
+    get_boundaries_of_number_in_string,
+    part_two,
+)
 
 
 def test_solution_part_one():
     assert part_one("data/test_input.txt") == 2
+    assert part_one("data/test_input2.txt") == 3
+
+
+def test_solution_part_two():
+    assert part_two("data/test_input2.txt") == 12
 
 
 def test_decode_rule():
     rules = {0: "4 1 5", 1: "2 3 | 3 2", 2: "4 4 | 5 5", 3: "4 5 | 5 4", 4: "a", 5: "b"}
-    expected_result = re.compile(r"^(a)(((a)(a)|(b)(b))((a)(b)|(b)(a))|((a)(b)|(b)(a))((a)(a)|(b)(b)))(b)$")
+    expected_result = regex.compile(r"^(a)(((a)(a)|(b)(b))((a)(b)|(b)(a))|((a)(b)|(b)(a))((a)(a)|(b)(b)))(b)$")
 
     result = decode_rule(rules, rule_id_to_decode=0)
 

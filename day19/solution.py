@@ -1,9 +1,18 @@
-import re
 from typing import Pattern
+
+import regex
 
 
 def part_one(input_filename: str) -> int:
     rules, messages = _parse_file(input_filename)
+    decoded_rule = decode_rule(rules, rule_id_to_decode=0)
+    return _count_valid_messages(decoded_rule, messages)
+
+
+def part_two(input_filename: str) -> int:
+    rules, messages = _parse_file(input_filename)
+    rules[8] = "(42)+"
+    rules[11] = "(?P<recursive>42(?&recursive)?31)"
     decoded_rule = decode_rule(rules, rule_id_to_decode=0)
     return _count_valid_messages(decoded_rule, messages)
 
@@ -37,7 +46,7 @@ def decode_rule(rules: dict[int, str], rule_id_to_decode: int) -> Pattern[str]:
 
     rule = rule.replace(" ", "")
     rule = f"^{rule}$"
-    return re.compile(rule)
+    return regex.compile(rule)
 
 
 def replace_id_with_its_rule(rules: dict[int, str], rule: str, id_to_replace: int) -> str:
@@ -54,20 +63,21 @@ def replace_id_with_its_rule(rules: dict[int, str], rule: str, id_to_replace: in
 
 
 def is_rule_finished(rule: str) -> bool:
-    return not re.findall(r"\d+", rule)
+    return not regex.findall(r"\d+", rule)
 
 
 def get_ids(rule: str) -> set[int]:
-    return {int(number) for number in re.findall(r"\d+", rule)}
+    return {int(number) for number in regex.findall(r"\d+", rule)}
 
 
 def get_boundaries_of_number_in_string(rule: str, number: int) -> list[tuple[int, int]]:
-    return [match.span() for match in re.finditer(r"\d+", rule) if int(match.group()) == number]
+    return [match.span() for match in regex.finditer(r"\d+", rule) if int(match.group()) == number]
 
 
 def _count_valid_messages(decoded_rule: Pattern[str], messages: list[str]) -> int:
-    return sum(1 for message in messages if re.match(decoded_rule, message))
+    return sum(1 for message in messages if regex.fullmatch(decoded_rule, message))
 
 
 if __name__ == "__main__":
     print(part_one("data/input.txt"))
+    print(part_two("data/input.txt"))
