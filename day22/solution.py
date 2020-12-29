@@ -1,7 +1,11 @@
 from collections import deque
+from collections.abc import Callable
+from enum import Enum
 
-PLAYER_ONE = "Player 1"
-PLAYER_TWO = "Player 2"
+
+class Player(Enum):
+    ONE = "Player 1"
+    TWO = "Player 2"
 
 
 def part_one(input_filename: str) -> int:
@@ -39,13 +43,28 @@ def play_game(player_1_deck: deque[int], player_2_deck: deque[int]) -> deque[int
 
 
 def play_round(player_1_deck: deque[int], player_2_deck: deque[int]) -> None:
+    return _play_round(player_1_deck, player_2_deck, _higher_card_wins)
+
+
+def _play_round(
+    player_1_deck: deque[int],
+    player_2_deck: deque[int],
+    determine_winner: Callable[[deque[int], deque[int], int, int], Player],
+) -> None:
     player_1_card = player_1_deck.popleft()
     player_2_card = player_2_deck.popleft()
-    deck = player_1_deck if player_1_card > player_2_card else player_2_deck
-    higher_card = player_1_card if player_1_card > player_2_card else player_2_card
-    lower_card = player_2_card if player_1_card > player_2_card else player_1_card
+    winner = determine_winner(player_1_deck, player_2_deck, player_1_card, player_2_card)
+    deck = player_1_deck if winner == Player.ONE else player_2_deck
+    higher_card = player_1_card if winner == Player.ONE else player_2_card
+    lower_card = player_2_card if winner == Player.ONE else player_1_card
     deck.append(higher_card)
     deck.append(lower_card)
+
+
+def _higher_card_wins(
+    _player_1_deck: deque[int], _player_2_deck: deque[int], player_1_card: int, player_2_card: int
+) -> Player:
+    return Player.ONE if player_1_card > player_2_card else Player.TWO
 
 
 def play_recursive_game(player_1_deck: deque[int], player_2_deck: deque[int]) -> deque[int]:
@@ -55,34 +74,34 @@ def play_recursive_game(player_1_deck: deque[int], player_2_deck: deque[int]) ->
 
 def _play_recursive_game(
     player_1_deck: deque[int], player_2_deck: deque[int], previous_states: set[tuple[tuple[int], tuple[int]]],
-) -> tuple[str, deque[int]]:
+) -> tuple[Player, deque[int]]:
     while player_1_deck and player_2_deck:
         current_state = (tuple(player_1_deck), tuple(player_2_deck))
         if current_state in previous_states:
-            return PLAYER_ONE, player_1_deck
+            return Player.ONE, player_1_deck
 
         previous_states.add(current_state)
         play_round_of_recursive_game(player_1_deck, player_2_deck)
 
-    return (PLAYER_ONE, player_1_deck) if player_1_deck else (PLAYER_TWO, player_2_deck)
+    return (Player.ONE, player_1_deck) if player_1_deck else (Player.TWO, player_2_deck)
 
 
 def play_round_of_recursive_game(player_1_deck: deque[int], player_2_deck: deque[int]) -> None:
-    player_1_card = player_1_deck.popleft()
-    player_2_card = player_2_deck.popleft()
+    _play_round(player_1_deck, player_2_deck, _determine_round_winner_of_recursive_game)
+
+
+def _determine_round_winner_of_recursive_game(
+    player_1_deck: deque[int], player_2_deck: deque[int], player_1_card: int, player_2_card: int
+) -> Player:
     if len(player_1_deck) >= player_1_card and len(player_2_deck) >= player_2_card:
         winner, _winning_deck = _play_recursive_game(
             _get_first_n(player_1_deck, player_1_card),
             _get_first_n(player_2_deck, player_2_card),
             previous_states=set(),
         )
-    else:
-        winner = PLAYER_ONE if player_1_card > player_2_card else PLAYER_TWO
-    deck = player_1_deck if winner == PLAYER_ONE else player_2_deck
-    higher_card = player_1_card if winner == PLAYER_ONE else player_2_card
-    lower_card = player_2_card if winner == PLAYER_ONE else player_1_card
-    deck.append(higher_card)
-    deck.append(lower_card)
+        return winner
+
+    return _higher_card_wins(player_1_deck, player_2_deck, player_1_card, player_2_card)
 
 
 def _get_first_n(deq: deque[int], n: int) -> deque[int]:
