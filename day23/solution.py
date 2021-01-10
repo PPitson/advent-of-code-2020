@@ -1,18 +1,26 @@
 def part_one(labels_input: str) -> str:
-    return play_game(labels_input, moves=100)
+    cups = list(map(int, labels_input))
+    cups_after_game = play_game(cups, moves=100)
+    return get_result_label(cups_after_game)
 
 
-def play_game(labels_input: str, moves: int) -> str:
-    cups = _create_cups(labels_input)
-    current_cup = int(labels_input[0])
+def part_two(labels_input: str) -> int:
+    cups = list(map(int, labels_input))
+    cups += list(range(max(cups) + 1, 1_000_001))
+    cups_after_game = play_game(cups, moves=10_000_000)
+    return cups_after_game[1] * cups_after_game[cups_after_game[1]]
+
+
+def play_game(cups: list[int], moves: int) -> dict[int, int]:
+    cups = _create_cups_dict(cups)
+    current_cup = next(iter(cups))
     for i in range(moves):
         cups, current_cup = make_move(cups, current_cup)
 
-    return get_result_label(cups)
+    return cups
 
 
-def _create_cups(labels_input: str) -> dict[int, int]:
-    cups = list(map(int, labels_input))
+def _create_cups_dict(cups: list[int]) -> dict[int, int]:
     result = {cup: cups[index + 1] for index, cup in enumerate(cups[:-1])}
     result[cups[-1]] = cups[0]
     return result
@@ -55,3 +63,4 @@ def get_result_label(cups: dict[int, int]) -> str:
 
 if __name__ == "__main__":
     print(part_one("562893147"))
+    print(part_two("562893147"))
